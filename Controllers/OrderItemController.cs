@@ -41,13 +41,13 @@ namespace webApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OrderItemDto>> CreateOrdersItems(CreateOrderItemDto createOrderItemDto)
+        public IActionResult CreateOrdersItems(CreateOrderItemDto createOrderItemDto)
         {
-            var orderItem = _mapper.Map<Order>(createOrderItemDto);
-            await _context.SaveChangesAsync();
+            var orderItem = _mapper.Map<OrderItem>(createOrderItemDto);
 
-            var orderItemDto = _mapper.Map<OrderItemDto>(orderItem);
-            return CreatedAtAction(nameof(GetOrderOrdersItemsById), new { id = orderItem.Id }, orderItemDto);
+            _context.OrderItems.Add(orderItem);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetOrderOrdersItemsById), new { id = orderItem.Id }, orderItem);
         }
 
         [HttpPut("{id}")]

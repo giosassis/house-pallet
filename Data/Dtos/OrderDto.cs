@@ -12,6 +12,6 @@ namespace webApi.Data.Dtos
         public DateTime OrderDate { get; set; }
         public DeliveryAddressReadDto DeliveryAddress { get; set; }
         public PaymentMethodDto PaymentMethod { get; set; }
-        public List<OrderItemDto> OrderItems { get; set; }
+        public int OrderItemId { get; set; }
     }
 }

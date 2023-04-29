@@ -14,5 +14,6 @@ namespace webApi.Data
         public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Subcategory> Subcategories { get; set; }
     }
 }

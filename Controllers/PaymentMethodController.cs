@@ -32,7 +32,6 @@ namespace webApi.Controllers
             var paymentMethodDto = paymentMethods.Select(pm => new PaymentMethodDto
             {
                 Id = pm.Id,
-                Name = pm.PaymentMethodType?.Name,
                 CustomerId = pm.Customer!.Id,
                 PaymentDate = pm.PaymentDate,
                 PaymentAmmount = pm.PaymentAmount
@@ -54,10 +53,7 @@ namespace webApi.Controllers
         [HttpPost]
         public ActionResult<PaymentMethodDto> PostPaymentMethod([FromBody] CreatePaymentMethodDto paymentMethodCreateDto)
         {
-            var validator = new PaymentMethodCreateValidator();
-            var validationResult = validator.Validate(paymentMethodCreateDto);
 
-            if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 
             var paymentMethod = _mapper.Map<PaymentMethod>(paymentMethodCreateDto);
             _context.PaymentMethods.Add(paymentMethod);

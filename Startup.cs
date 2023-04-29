@@ -5,6 +5,8 @@ using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 
 namespace webApi
 {   
@@ -21,9 +23,10 @@ namespace webApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+            string connectionString = $"Server=devenvdb.cqcf1jsxjqpe.us-east-1.rds.amazonaws.com;Port=5432;Database=postgres;User Id=postgres;Password={dbPassword}";
             // Configuração do banco de dados
-            services.AddDbContext<ContextDb>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("MyConnectionString")));
+            services.AddDbContext<ContextDb>(options => options.UseNpgsql(connectionString));
 
             // Configuração do serviço de mapeamento de objetos
             services.AddAutoMapper(typeof(Startup));

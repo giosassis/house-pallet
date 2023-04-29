@@ -21,7 +21,6 @@ namespace webApi.Data.Dtos
 
         [Required(ErrorMessage = "The PaymentMethodId field is required.")]
         public int PaymentMethodId { get; set; }
-
-        public List<UpdateOrderItemDto> OrderItems { get; set; }
+        public int OrderItemId { get; set; }
     }
 }

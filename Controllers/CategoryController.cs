@@ -20,7 +20,7 @@ namespace webApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCustomer()
+        public IActionResult GetCategory()
         {
             var category = _context.Categories.ToList();
             var categoryDto = _mapper.Map<List<CategoryDto>>(category);

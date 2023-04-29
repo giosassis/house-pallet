@@ -16,21 +16,15 @@ namespace webApi.Models
         public int PaymentMethodId { get; set; }
         [ForeignKey("PaymentMethodId")]
         public PaymentMethod? PaymentMethod { get; set; }
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
-
+        public int OrderItemId { get; set; }
+        [ForeignKey("OrderItemId")]
+        public OrderItem? OrderItem { get; set; }
 
     }
-
-
-
 
     public class OrderItem
     {
         public int Id { get; set; }
-        public int OrderId { get; set; }
-        [ForeignKey("OrderId")]
-        public Order? Order { get; set; }
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         public Products? Products { get; set; }

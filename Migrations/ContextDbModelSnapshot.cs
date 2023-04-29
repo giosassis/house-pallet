@@ -86,6 +86,9 @@ namespace webApi.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PostalCode")
                         .HasColumnType("text");
 
@@ -119,6 +122,9 @@ namespace webApi.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("OrderItemId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("integer");
 
@@ -130,6 +136,8 @@ namespace webApi.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("DeliveryAddressId");
+
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -144,9 +152,6 @@ namespace webApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
@@ -157,8 +162,6 @@ namespace webApi.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -259,6 +262,27 @@ namespace webApi.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("webApi.Models.Subcategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Subcategories");
+                });
+
             modelBuilder.Entity("webApi.Models.DeliveryAddress", b =>
                 {
                     b.HasOne("webApi.Models.Customer", "Customer")
@@ -284,6 +308,12 @@ namespace webApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("webApi.Models.OrderItem", "OrderItem")
+                        .WithMany()
+                        .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("webApi.Models.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
@@ -294,24 +324,18 @@ namespace webApi.Migrations
 
                     b.Navigation("DeliveryAddress");
 
+                    b.Navigation("OrderItem");
+
                     b.Navigation("PaymentMethod");
                 });
 
             modelBuilder.Entity("webApi.Models.OrderItem", b =>
                 {
-                    b.HasOne("webApi.Models.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("webApi.Models.Products", "Products")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
 
                     b.Navigation("Products");
                 });
@@ -346,14 +370,20 @@ namespace webApi.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("webApi.Models.Subcategory", b =>
+                {
+                    b.HasOne("webApi.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("webApi.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("webApi.Models.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

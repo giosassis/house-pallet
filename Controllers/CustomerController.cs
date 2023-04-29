@@ -33,7 +33,7 @@ namespace webApi.Controllers
         {
             var customer = _context.Customers.Find(id);
             if (customer == null) return NotFound("Customer doesn't exists on database");
-            var customersDto = _mapper.Map<ProductsDto>(customer);
+            var customersDto = _mapper.Map<CustomerDto>(customer);
             return Ok(customersDto);
         }
 

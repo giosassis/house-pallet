@@ -10,6 +10,7 @@ namespace webApi.Data.Dtos
         [Required(ErrorMessage = "The Street field is required.")]
         [MaxLength(100, ErrorMessage = "The Street field can have at most 100 characters.")]
         public string? Street { get; set; }
+        public int Number { get; set; }
 
         [Required(ErrorMessage = "The City field is required.")]
         [MaxLength(50, ErrorMessage = "The City field can have at most 50 characters.")]
