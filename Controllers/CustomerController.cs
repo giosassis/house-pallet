@@ -1,82 +1,89 @@
 ﻿using AutoMapper;
-using FluentValidation.Results;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using webApi.Data;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using webApi.Data.Dtos;
 using webApi.Models;
+using webApi.Repository.Interface;
+using webApi.Service.Interfaces;
 using webApi.Validators;
 
 namespace webApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class CustomerController : ControllerBase
+    [Route("api/[controller]")]
+    public class CustomersController : ControllerBase
     {
-        private readonly ContextDb _context;
+        private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        public CustomerController(ContextDb context, IMapper mapper)
+
+        public CustomersController(ICustomerService customerService, IMapper mapper)
         {
-            _context = context;
+            _customerService = customerService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult GetCustomer()
+        public async Task<ActionResult<List<CustomerDto>>> GetAllCustomersAsync()
         {
-            var customer = _context.Customers.ToList();
-            var customersDto = _mapper.Map<List<CustomerDto>>(customer);
-            return Ok(customersDto);
+            var customers = await _customerService.GetAllCustomersAsync();
+            return Ok(_mapper.Map<List<CustomerDto>>(customers));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Customer> GetCustomerById(int id)
+        public async Task<ActionResult<CustomerDto>> GetCustomerByIdAsync(int id)
         {
-            var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound("Customer doesn't exists on database");
-            var customersDto = _mapper.Map<CustomerDto>(customer);
-            return Ok(customersDto);
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
         [HttpPost]
-        public IActionResult CreateCustomer([FromBody] CreateCustomerDto createCustomerDto)
+        public async Task<ActionResult<CreateCustomerDto>> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
         {
-            Customer customer = _mapper.Map<Customer>(createCustomerDto);
+            var customer = _mapper.Map<Customer>(createCustomerDto);
             var validator = new CustomerValidator();
-            ValidationResult result = validator.Validate(customer);
+            var validationResult = validator.Validate(customer);
 
-            if(!result.IsValid)
+            if (!validationResult.IsValid)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(validationResult.Errors);
             }
-
-            if (_context.Customers.Any(c => c.Cpf == createCustomerDto.Cpf))
-            {
-                return Conflict("Customer already exists.");
-            }
-            _context.Customers.Add(customer);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, customer);
+            var createdCustomer = await _customerService.CreateCustomerAsync(createCustomerDto);
+            return CreatedAtAction(nameof(GetCustomerByIdAsync), new { id = createdCustomer.Id }, customer);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCustomer(int id, [FromBody] UpdateCustomerDto updateCustomerDto)
+        public async Task<ActionResult<UpdateCustomerDto>> UpdateCustomerAsync(int id, UpdateCustomerDto customerDto)
         {
-            var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound("Customer doesn't exists on database");
-            _mapper.Map(updateCustomerDto, customer);
-            _context.SaveChanges();
-            return NoContent();
+            try
+            {
+                var updatedCustomer = await _customerService.UpdateCustomerAsync(id, customerDto);
+                return Ok(_mapper.Map<UpdateCustomerDto>(updatedCustomer));
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
+        public async Task<ActionResult> DeleteCustomerAsync(int id)
         {
-            var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound("Product doesn't exists on database");
-
-            _context.Customers.Remove(customer);
-            _context.SaveChanges();
-            return NoContent();
+            try
+            {
+                await _customerService.DeleteCustomerAsync(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
     }
 }

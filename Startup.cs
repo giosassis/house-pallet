@@ -7,6 +7,14 @@ using Npgsql;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using webApi.Service.Interface;
+using webApi.Service.Implementation;
+using webApi.Repository.Implementation;
+using webApi.Repository.Interface;
+using webApi.Repositories.Interfaces;
+using webApi.Service.Interfaces;
+using webApi.Repositories.Implementations;
+using webApi.Service.Implementations;
 
 namespace webApi
 {   
@@ -27,6 +35,11 @@ namespace webApi
             string connectionString = $"Server=devenvdb.cqcf1jsxjqpe.us-east-1.rds.amazonaws.com;Port=5432;Database=postgres;User Id=postgres;Password={dbPassword}";
             // Configuração do banco de dados
             services.AddDbContext<ContextDb>(options => options.UseNpgsql(connectionString));
+
+            //Dependence Injection 
+            services.AddRepositories();
+            services.AddServices();
+
 
             // Configuração do serviço de mapeamento de objetos
             services.AddAutoMapper(typeof(Startup));

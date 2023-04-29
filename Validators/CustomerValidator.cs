@@ -104,7 +104,5 @@ namespace webApi.Validators
                 return false;
             }
         }
-
-
     }
 }

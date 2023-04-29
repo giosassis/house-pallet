@@ -4,6 +4,7 @@ namespace webApi.Data.Dtos
 {
     public class CreateCustomerDto
     {
+        public int Id { get; set; }
         [Required]
         [StringLength(50)]
         public string? FirstName { get; set; }
