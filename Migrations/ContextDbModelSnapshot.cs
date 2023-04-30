@@ -35,7 +35,7 @@ namespace webApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.Customer", b =>
@@ -66,7 +66,7 @@ namespace webApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.DeliveryAddress", b =>
@@ -102,7 +102,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("DeliveryAddresses");
+                    b.ToTable("DeliveryAddresses", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.Order", b =>
@@ -141,7 +141,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.OrderItem", b =>
@@ -165,7 +165,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.PaymentMethod", b =>
@@ -194,7 +194,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("PaymentMethodTypeId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.PaymentMethodType", b =>
@@ -210,7 +210,7 @@ namespace webApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethodTypes");
+                    b.ToTable("PaymentMethodTypes", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.Products", b =>
@@ -259,7 +259,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.Subcategory", b =>
@@ -280,7 +280,7 @@ namespace webApi.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Subcategories");
+                    b.ToTable("Subcategories", (string)null);
                 });
 
             modelBuilder.Entity("webApi.Models.DeliveryAddress", b =>

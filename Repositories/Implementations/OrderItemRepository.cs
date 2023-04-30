@@ -15,7 +15,7 @@ namespace webApi.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<List<OrderItem>> GetOrderItemsAsync()
+        public async Task<List<OrderItem>> GetAllOrderItemsAsync()
         {
             return await _context.Set<OrderItem>().ToListAsync();
         }
@@ -23,22 +23,6 @@ namespace webApi.Repositories.Implementations
         public async Task<OrderItem> GetOrderItemByIdAsync(int id)
         {
             return await _context.Set<OrderItem>().FindAsync(id);
-        }
-
-        public async Task<List<OrderItem>> GetOrderItemsByOrderIdAsync(int id)
-        {
-            var order = await _context.Orders
-                .Include(o => o.OrderItem)
-                .ThenInclude(oi => oi.Products)
-                .FirstOrDefaultAsync(o => o.Id == id);
-
-            if (order == null)
-            {
-                // retorna uma lista vazia ou lança uma exceção, dependendo do que for mais adequado para o seu cenário
-                return new List<OrderItem>();
-            }
-
-            return order.OrderItemId;
         }
 
         public async Task<OrderItem> CreateOrderItemAsync(OrderItem orderItem)

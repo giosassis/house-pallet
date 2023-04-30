@@ -6,11 +6,10 @@ namespace webApi.Repository.Interface
 {
     public interface ISubcategoryRepository
     {
-        Task<List<Subcategory>> GetAllSubcategoriesAsync();
-        Task<Subcategory> GetSubcategoryByIdAsync(int subcategoryId);
-        Task<List<Subcategory>> GetSubcategoriesByCategoryIdAsync(int categoryId);
-        Task AddSubcategoryAsync(Subcategory subcategory);
-        Task<bool> UpdateSubcategoryAsync(Subcategory subcategory);
-        Task<bool> DeleteSubcategoryAsync(int subcategoryId);
+        Task<List<Subcategory>> GetAllAsync();
+        Task<Subcategory> GetByIdAsync(int id);
+        Task<int> CreateAsync(Subcategory subcategory);
+        Task UpdateAsync(Subcategory subcategory);
+        Task DeleteAsync(Subcategory subcategory);
     }
 }
