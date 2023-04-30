@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Xhu8Gq8XeUGgXM1hBqG9lFQd/gLfUyVs5YEJqCgZe/9qvfd5dB/CsRt6DFO3Z9ayV/IXoUU2BG3wREmJ/uJQwQ==",
+  "dgSpecHash": "aUGyD8pDBK149+QeL5CTT04oVZrSxENlTb9BSRfftKfE0HHP5SqGwl9jALyx8pjAbOE/gsGKzG5gXImmwO3jGg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
+  "projectFilePath": "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\giova\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\giova\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
