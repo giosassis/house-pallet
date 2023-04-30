@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj": {}
+    "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj": {}
   },
   "projects": {
-    "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj": {
+    "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
+        "projectUniqueName": "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
         "projectName": "webApi",
-        "projectPath": "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
+        "projectPath": "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\webApi.csproj",
         "packagesPath": "C:\\Users\\giova\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\giova\\Desktop\\Programação\\house-pallet\\obj\\",
+        "outputPath": "C:\\Users\\giova\\Desktop\\Programação\\house-pallet\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\giova\\AppData\\Roaming\\NuGet\\NuGet.Config",

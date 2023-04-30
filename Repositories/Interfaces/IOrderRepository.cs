@@ -1,77 +1,16 @@
-﻿using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using webApi.Data;
-using webApi.Data.Dtos;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using webApi.Models;
-using webApi.Validators;
 
-namespace webApi.Controllers
+namespace webApi.Repository.Interface
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public interface IOrderRepository
     {
-        private readonly ContextDb _context;
-        private readonly IMapper _mapper;
-
-        public OrderController(ContextDb context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        [HttpGet]
-        public IActionResult GetOrders()
-        {
-            var orders = _context.Orders.ToList();
-            var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
-            return Ok(orderDtos);
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Order> GetOrder(int id)
-        {
-            var order = _context.Orders.Find(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            var orderDto = _mapper.Map<OrderDto>(order);
-            return Ok(orderDto);
-        }
-
-        [HttpPost]
-        public IActionResult CreateOrder(CreateOrderDto createOrderDto)
-        {
-            var order = _mapper.Map<Order>(createOrderDto);
-
-            _context.Orders.Add(order);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, UpdateOrderDto updateOrderDto)
-        {
-            var order = _context.Orders.Find(id);
-            if (order == null) return NotFound();
-
-            _mapper.Map(updateOrderDto, order);
-            _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id)
-        {
-            var order = _context.Orders.Find(id);
-            if (order == null) return NotFound();
-
-            _context.Orders.Remove(order);
-            _context.SaveChanges();
-            return NoContent();
-        }
+       Task<Order> GetOrderByIdAsync(int id);
+        Task<List<Order>> GetAllOrdersAsync();
+        Task<List<Order>> GetOrdersByCustomerIdAsync(int customerId);
+        Task AddOrderAsync(Order order);
+        Task UpdateOrderAsync(Order order);
+        Task DeleteOrderAsync(Order order);
     }
 }
