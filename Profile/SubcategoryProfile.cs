@@ -8,9 +8,12 @@ namespace webApi.Profiles
     {
         public SubcategoryProfile()
         {
+            CreateMap<CreateSubcategoryDto, SubcategoryDto>();
             CreateMap<CreateSubcategoryDto, Subcategory>();
+            CreateMap<Subcategory, CreateSubcategoryDto>();
             CreateMap<UpdateSubcategoryDto, Subcategory>();
             CreateMap<Subcategory, SubcategoryDto>();
+            CreateMap<SubcategoryDto, Subcategory>();
             CreateMap<Subcategory, UpdateSubcategoryDto>();
         }
     }

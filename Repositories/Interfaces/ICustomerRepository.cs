@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using webApi.Models;
+using WebApi.Models;
 
 namespace webApi.Repository.Interface
 {

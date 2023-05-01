@@ -9,6 +9,7 @@ using webApi.Models;
 using webApi.Repository.Interface;
 using webApi.Service.Interfaces;
 using webApi.Validators;
+using WebApi.Models;
 
 namespace webApi.Controllers
 {

@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using webApi.Data;
-using webApi.Models;
-using webApi.Repositories.Interfaces;
-using webApi.Repository.Interface;
-
-namespace webApi.Repositories.Implementations
+namespace WebApi.Repositories.Implementations
 {
-   public class DeliveryAddressRepository : IDeliveryAddressRepository
+    using Microsoft.EntityFrameworkCore;
+    using webApi.Data;
+    using webApi.Models;
+    using webApi.Repository.Interface;
+
+    #pragma warning disable SA1101 // PrefixLocalCallsWithThis
+
+    public class DeliveryAddressRepository : IDeliveryAddressRepository
     {
     private readonly ContextDb _dbContext;
 

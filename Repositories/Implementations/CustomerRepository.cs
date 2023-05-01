@@ -2,6 +2,7 @@
 using webApi.Data;
 using webApi.Models;
 using webApi.Repository.Interface;
+using WebApi.Models;
 
 namespace webApi.Repository.Implementation
 {

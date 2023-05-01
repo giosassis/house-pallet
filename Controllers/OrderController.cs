@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using webApi.Data;
 using webApi.Data.Dtos;
-using webApi.Models;
-using webApi.Validators;
+using webApi.Repository.Interface;
 
 namespace webApi.Controllers
 {
@@ -12,65 +9,65 @@ namespace webApi.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly ContextDb _context;
+        private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public OrderController(ContextDb context, IMapper mapper)
+        public OrderController(IOrderService orderService, IMapper mapper)
         {
-            _context = context;
+            _orderService = orderService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<ActionResult<List<OrderDto>>> GetAllOrdersAsync()
         {
-            var orders = _context.Orders.ToList();
-            var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
-            return Ok(orderDtos);
+            var orders = await _orderService.GetAllOrdersAsync();
+            var orderReadDtos = _mapper.Map<List<OrderDto>>(orders);
+            return Ok(orderReadDtos);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Order> GetOrder(int id)
+        public async Task<ActionResult<OrderDto>> GetOrderByIdAsync(int id)
         {
-            var order = _context.Orders.Find(id);
+            var order = await _orderService.GetOrderByIdAsync(id);
+
             if (order == null)
             {
                 return NotFound();
             }
 
-            var orderDto = _mapper.Map<OrderDto>(order);
-            return Ok(orderDto);
+            var orderReadDto = _mapper.Map<OrderDto>(order);
+            return Ok(orderReadDto);
         }
 
         [HttpPost]
-        public IActionResult CreateOrder(CreateOrderDto createOrderDto)
+        public async Task<ActionResult<CreateOrderDto>> CreateOrderAsync(CreateOrderDto orderCreateDto)
         {
-            var order = _mapper.Map<Order>(createOrderDto);
+            var order = _mapper.Map<CreateOrderDto>(orderCreateDto);
+            await _orderService.CreateOrderAsync(order);
 
-            _context.Orders.Add(order);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+            var orderReadDto = _mapper.Map<CreateOrderDto>(order);
+            return CreatedAtRoute(nameof(GetOrderByIdAsync), new { id = orderReadDto.Id }, orderReadDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, UpdateOrderDto updateOrderDto)
+        public async Task<ActionResult<UpdateOrderDto>> UpdateDeliveryAddressAsync(int id, UpdateOrderDto updateOrderDto)
         {
-            var order = _context.Orders.Find(id);
-            if (order == null) return NotFound();
-
-            _mapper.Map(updateOrderDto, order);
-            _context.SaveChangesAsync();
-
+            if (id != updateOrderDto.Id) return BadRequest();
+            await _orderService.UpdateOrderAsync(id, updateOrderDto);
             return NoContent();
         }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id)
-        {
-            var order = _context.Orders.Find(id);
-            if (order == null) return NotFound();
 
-            _context.Orders.Remove(order);
-            _context.SaveChanges();
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteDeliveryAddressAsync(int id)
+        {
+            var deliveryAddress = await _orderService.GetOrderByIdAsync(id);
+            if (deliveryAddress == null)
+            {
+                return NotFound();
+            }
+
+            await _orderService.DeleteOrderAsync(id);
             return NoContent();
         }
     }

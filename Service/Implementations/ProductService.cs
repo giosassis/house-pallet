@@ -32,6 +32,10 @@ namespace webApi.Service.Implementation
         public async Task<CreateProductDto> AddProductAsync(CreateProductDto productDto)
         {
             var product = _mapper.Map<Products>(productDto);
+
+            product.CreatedAt = DateTime.UtcNow;
+            product.UpdatedAt = DateTime.UtcNow;
+
             var createdProduct = await _productRepository.AddProductAsync(product);
             return _mapper.Map<CreateProductDto>(createdProduct);
         }

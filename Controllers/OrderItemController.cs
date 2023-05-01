@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using webApi.Data;
 using webApi.Data.Dtos;
 using webApi.Models;
+using webApi.Repositories.Implementations;
+using webApi.Repository.Interface;
+using webApi.Service.Implementations;
 
 namespace webApi.Controllers
 {
@@ -10,65 +12,60 @@ namespace webApi.Controllers
     [Route("api/[controller]")]
     public class OrderItemController : ControllerBase
     {
-        private readonly ContextDb _context;
+        private readonly IOrderItemService _orderItemService;
         private readonly IMapper _mapper;
 
-        public OrderItemController(ContextDb context, IMapper mapper)
+        public OrderItemController(IOrderItemService orderItemService, IMapper mapper)
         {
-            _context = context;
+            _orderItemService = orderItemService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult GetOrdersItems()
+        public async Task<ActionResult<List<OrderItemDto>>> GetAllOrderItemAsync()
         {
-            var orderItem = _context.OrderItems.ToList();
-            var orderItemDtos = _mapper.Map<IEnumerable<OrderItemDto>>(orderItem);
-            return Ok(orderItemDtos);
+            var orderItem = await _orderItemService.GetAllOrderItemsAsync();
+            var orderItemReadDtos = _mapper.Map<List<OrderItemDto>>(orderItem);
+            return Ok(orderItemReadDtos);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<OrderItem> GetOrderOrdersItemsById(int id)
+        public async Task<ActionResult<OrderItemDto>> GetOrderItemByIdAsync(int id)
         {
-            var orderItem = _context.OrderItems.Find(id);
+            var orderItem = await _orderItemService.GetOrderItemByIdAsync(id);
             if (orderItem == null)
             {
                 return NotFound();
             }
 
-            var orderItemDto = _mapper.Map<OrderItemDto>(orderItem);
-            return Ok(orderItemDto);
+            var orderItemReadDto = _mapper.Map<OrderItemDto>(orderItem);
+            return Ok(orderItemReadDto);
         }
 
         [HttpPost]
-        public IActionResult CreateOrdersItems(CreateOrderItemDto createOrderItemDto)
+        public async Task<ActionResult<CreateOrderItemDto>> CreatePaymentMethodAsync(CreateOrderItemDto createOrderItemDto)
         {
-            var orderItem = _mapper.Map<OrderItem>(createOrderItemDto);
-
-            _context.OrderItems.Add(orderItem);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetOrderOrdersItemsById), new { id = orderItem.Id }, orderItem);
+            var createOrderItem = await _orderItemService.CreateOrderItemAsync(createOrderItemDto);
+            return CreatedAtAction(nameof(GetOrderItemByIdAsync), new { id = createOrderItem.Id }, createOrderItem);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateOrdersItems(int id, UpdateOrderDto updateOrderDto)
+        public async Task<ActionResult<UpdateOrderItemDto>> UpdateDeliveryAddressAsync(int id, UpdateOrderItemDto updateItemOrderDto)
         {
-            var orderItem = _context.OrderItems.Find(id);
-            if (orderItem == null) return NotFound();
-
-            _mapper.Map(updateOrderDto, orderItem);
-            _context.SaveChangesAsync();
-
+            if (id != updateItemOrderDto.Id) return BadRequest();
+            await _orderItemService.UpdateOrderItemAsync(id, updateItemOrderDto);
             return NoContent();
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteOrdersItems(int id)
+        public async Task<ActionResult> DeleteDeliveryAddressAsync(int id)
         {
-            var orderItem = _context.OrderItems.Find(id);
-            if (orderItem == null) return NotFound();
+            var deliveryAddress = await _orderItemService.GetOrderItemByIdAsync(id);
+            if (deliveryAddress == null)
+            {
+                return NotFound();
+            }
 
-            _context.OrderItems.Remove(orderItem);
-            _context.SaveChanges();
+            await _orderItemService.DeleteOrderItemAsync(id);
             return NoContent();
         }
     }

@@ -9,9 +9,12 @@ namespace webApi.Profiles
         public DeliveryAddressProfile()
         {
             CreateMap<DeliveryAddressCreateDto, DeliveryAddress>();
+            CreateMap<DeliveryAddress, DeliveryAddressCreateDto>();
+            CreateMap<DeliveryAddressReadDto, DeliveryAddress>();
             CreateMap<DeliveryAddressUpdateDto, DeliveryAddress>();
             CreateMap<DeliveryAddress, DeliveryAddressReadDto>();
             CreateMap<DeliveryAddress, DeliveryAddressUpdateDto>();
+            CreateMap<DeliveryAddressCreateDto, DeliveryAddressReadDto>();
         }
     }
 }

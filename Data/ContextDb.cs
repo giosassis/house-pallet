@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using webApi.Models;
+using WebApi.Models;
 
 namespace webApi.Data
 {

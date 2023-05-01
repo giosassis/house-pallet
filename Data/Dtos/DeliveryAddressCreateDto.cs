@@ -4,6 +4,7 @@ namespace webApi.Data.Dtos
 {
     public class DeliveryAddressCreateDto
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "The CustomerId field is required.")]
         public int CustomerId { get; set; }
 

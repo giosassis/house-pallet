@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using System.Net.Mail;
 using webApi.Data.Dtos;
 using webApi.Models;
+using WebApi.Models;
 
 namespace webApi.Validators
 {

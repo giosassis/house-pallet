@@ -6,6 +6,7 @@ using webApi.Data;
 using webApi.Data.Dtos;
 using webApi.Models;
 using webApi.Validators;
+using WebApi.Service.Interface;
 
 namespace webApi.Controllers
 {
@@ -13,77 +14,62 @@ namespace webApi.Controllers
     [Route("[controller]")]
     public class DeliveryAddressController : ControllerBase
     {
-        private readonly ContextDb _context;
+        private readonly IDeliveryAddressService _deliveryAddressService;
         private readonly IMapper _mapper;
-        public DeliveryAddressController(ContextDb context, IMapper mapper)
+        public DeliveryAddressController(IMapper mapper, IDeliveryAddressService deliveryAddressService)
         {
-            _context = context;
+            _deliveryAddressService = deliveryAddressService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult GetDeliveryAddresses()
+        public async Task<ActionResult<List<DeliveryAddressReadDto>>> GetAllDeliveryAddressesAsync()
         {
-            var address = _context.DeliveryAddresses.ToList();
-            var addressDto = _mapper.Map<List<DeliveryAddressReadDto>>(address);
-            return Ok(addressDto);
+            var deliveryAddresses = await _deliveryAddressService.GetAllDeliveryAddressesAsync();
+            var deliveryAddressReadDtos = _mapper.Map<List<DeliveryAddressReadDto>>(deliveryAddresses);
+            return Ok(deliveryAddressReadDtos);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<DeliveryAddress> GetDeliveryAddressById(int id)
+        public async Task<ActionResult<DeliveryAddressReadDto>> GetDeliveryAddressByIdAsync(int id)
         {
-            var address = _context.DeliveryAddresses.Find(id);
-            if (address == null) return NotFound();
-            var addressDto = _mapper.Map<DeliveryAddressReadDto>(address);
-            return Ok(addressDto);
+            var deliveryAddress = await _deliveryAddressService.GetDeliveryAddressByIdAsync(id);
+            if (deliveryAddress == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryAddressReadDto = _mapper.Map<DeliveryAddressReadDto>(deliveryAddress);
+            return Ok(deliveryAddressReadDto);
         }
 
         [HttpPost]
-        public IActionResult CreateAddress([FromBody] DeliveryAddressCreateDto deliveryAddressCreateDto)
+        public async Task<ActionResult<DeliveryAddressCreateDto>> CreateDeliveryAddressAsync(DeliveryAddressCreateDto deliveryAddressCreateDto)
         {
-            DeliveryAddress address = _mapper.Map<DeliveryAddress>(deliveryAddressCreateDto);
-
-            var validator = new DeliveryAddressCreateValidator();
-            ValidationResult result = validator.Validate(deliveryAddressCreateDto);
-
-            if (!result.IsValid)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            _context.DeliveryAddresses.Add(address);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetDeliveryAddressById), new { id = address.Id }, address);
+            var deliveryAddress = _mapper.Map<DeliveryAddressCreateDto>(deliveryAddressCreateDto);
+            await _deliveryAddressService.CreateDeliveryAddressAsync(deliveryAddress);
+            var deliveryAddressReadDto = _mapper.Map<DeliveryAddressReadDto>(deliveryAddress);
+            return CreatedAtAction(nameof(GetDeliveryAddressByIdAsync), new { deliveryAddress.Id }, deliveryAddressReadDto);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAddress(int id, [FromBody] DeliveryAddressUpdateDto deliveryAddressUpdateDto)
+        public async Task<ActionResult<DeliveryAddressUpdateDto>> UpdateDeliveryAddressAsync(int id, DeliveryAddressUpdateDto deliveryAddressUpdateDto)
         {
-            var address = _context.DeliveryAddresses.Find(id);
-
-            var validator = new DeliveryAddressUpdateValidator();
-            ValidationResult result = validator.Validate(deliveryAddressUpdateDto);
-
-            if (!result.IsValid)
-            {
-                return BadRequest(result.Errors);
-            }
-
-
-            if (address == null) return NotFound();
-            _mapper.Map(deliveryAddressUpdateDto, address);
-            _context.SaveChanges();
+            if (id != deliveryAddressUpdateDto.Id) return BadRequest();
+            await _deliveryAddressService.UpdateDeliveryAddressAsync(id, deliveryAddressUpdateDto);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAddress(int id)
+        public async Task<ActionResult> DeleteDeliveryAddressAsync(int id)
         {
-            var address = _context.DeliveryAddresses.Find(id);
-            if (address == null) return NotFound();
+            var deliveryAddress = await _deliveryAddressService.GetDeliveryAddressByIdAsync(id);
+            if (deliveryAddress == null)
+            {
+                return NotFound();
+            }
 
-            _context.DeliveryAddresses.Remove(address);
-            _context.SaveChanges();
+            await _deliveryAddressService.DeleteDeliveryAddressAsync(id);
             return NoContent();
         }
     }
