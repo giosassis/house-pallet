@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using webApi.Data.Dtos;
 using webApi.Models;
 using webApi.Repository.Interface;
+using webApi.Service.Implementations;
 using webApi.Service.Interfaces;
 using webApi.Validators;
 using WebApi.Models;
@@ -56,7 +57,8 @@ namespace webApi.Controllers
                 return BadRequest(validationResult.Errors);
             }
             var createdCustomer = await _customerService.CreateCustomerAsync(createCustomerDto);
-            return CreatedAtAction(nameof(GetCustomerByIdAsync), new { id = createdCustomer.Id }, customer);
+            var createdCustomerDto = _mapper.Map<CustomerDto>(createdCustomer);
+            return CreatedAtAction(nameof(GetCustomerByIdAsync), new { id = createdCustomerDto.Id }, createdCustomerDto);
         }
 
         [HttpPut("{id}")]

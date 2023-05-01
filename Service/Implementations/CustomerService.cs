@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using System.Security.Cryptography;
+using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +13,7 @@ using webApi.Repository.Interface;
 using webApi.Service.Interfaces;
 using webApi.Validators;
 using WebApi.Models;
+using webApi.Repository.Implementation;
 
 namespace webApi.Service.Implementations
 {
@@ -37,10 +40,30 @@ namespace webApi.Service.Implementations
             return _mapper.Map<CustomerDto>(customer);
         }
 
-        public async Task<CreateCustomerDto> CreateCustomerAsync(CreateCustomerDto customerDto)
+        public async Task<CreateCustomerDto> CreateCustomerAsync(CreateCustomerDto createCustomerDto)
         {
-            
-            var customer = _mapper.Map<Customer>(customerDto);
+            var customer = _mapper.Map<Customer>(createCustomerDto);
+
+            if (await _customerRepository.CustomerExistsWithCpfAsync(customer.Cpf))
+            {
+                throw new Exception("CPF já cadastrado no sistema.");
+            }
+
+            if (customer != null )
+            {
+                customer.Birthdate = customer.Birthdate.Value.Date;
+            }
+            string hashedPassword = HashPassword(createCustomerDto.Password);
+            customer.Password = hashedPassword;
+
+            CustomerValidator validator = new CustomerValidator();
+            var validationResult = await validator.ValidateAsync(customer);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             await _customerRepository.CreateCustomerAsync(customer);
             return _mapper.Map<CreateCustomerDto>(customer);
         }
@@ -68,6 +91,19 @@ namespace webApi.Service.Implementations
                 }
 
                 await _customerRepository.DeleteCustomerAsync(id);
+            }
+        }
+
+        private static string HashPassword(string password)
+        {
+            
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+          
+                byte[] hashBytes = sha256.ComputeHash(passwordBytes);
+
+                return Convert.ToBase64String(hashBytes);
             }
         }
     }

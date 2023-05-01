@@ -39,7 +39,7 @@ namespace webApi.Repositories.Implementations
             {
                 existingOrderItem.ProductId = orderItem.ProductId;
                 existingOrderItem.Quantity = orderItem.Quantity;
-                existingOrderItem.Price = orderItem.Price;
+                existingOrderItem.UnitPrice = orderItem.UnitPrice;
 
                 await _context.SaveChangesAsync();
             }

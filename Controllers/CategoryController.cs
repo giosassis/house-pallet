@@ -9,10 +9,12 @@ using webApi.Service.Interfaces;
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
+    public readonly IMapper _mapper;
 
     public CategoryController(ICategoryService categoryService, IMapper mapper)
     {
         _categoryService = categoryService;
+        _mapper = mapper;
 
     }
 
@@ -35,10 +37,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateCategoryDto>> CreateCategoryAsync(CreateCategoryDto categoryDto)
+    public async Task<ActionResult<CategoryDto>> CreateCategoryAsync(CreateCategoryDto createCategoryDto)
     {
-        var createdCategory = await _categoryService.CreateCategoryAsync(categoryDto);
-        return CreatedAtAction(nameof(GetCategoryByIdAsync), new { id = createdCategory.Id }, createdCategory);
+        var createdCategory = await _categoryService.CreateCategoryAsync(createCategoryDto);
+        var categoryDto = _mapper.Map<CategoryDto>(createdCategory);
+        return CreatedAtAction(nameof(GetCategoryByIdAsync), new { id = categoryDto.Id }, categoryDto);
     }
 
     [HttpPut("{id}")]

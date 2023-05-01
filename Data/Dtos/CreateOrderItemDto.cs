@@ -10,8 +10,5 @@ namespace webApi.Data.Dtos
 
         [Required(ErrorMessage = "The Quantity field is required.")]
         public int Quantity { get; set; }
-
-        [Required(ErrorMessage = "The Price field is required.")]
-        public decimal Price { get; set; }
     }
 }

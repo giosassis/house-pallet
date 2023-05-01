@@ -72,5 +72,10 @@ namespace webApi.Repository.Implementation
         {
             return _dbContext.Customers.Any(p => p.Id == id);
         }
+
+        public async Task<bool> CustomerExistsWithCpfAsync(string cpf)
+        {
+            return await _dbContext.Customers.AnyAsync(c => c.Cpf == cpf);
+        }
     }
 }

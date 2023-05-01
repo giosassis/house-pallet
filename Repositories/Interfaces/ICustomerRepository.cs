@@ -12,6 +12,7 @@ namespace webApi.Repository.Interface
         Task<Customer> CreateCustomerAsync(Customer customer);
         Task<bool> UpdateCustomerAsync(int id, Customer customer);
         Task<bool> DeleteCustomerAsync(int id);
+        Task<bool> CustomerExistsWithCpfAsync(string cpf);
     }
 
 }

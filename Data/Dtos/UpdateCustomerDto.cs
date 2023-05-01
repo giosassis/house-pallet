@@ -22,5 +22,7 @@ namespace webApi.Data.Dtos
 
         [StringLength(100, MinimumLength = 6)]
         public string? Password { get; set; }
+
+        public DateTime? Birthday { get; set; }
     }
 }

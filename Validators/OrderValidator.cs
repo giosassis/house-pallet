@@ -34,7 +34,7 @@ public class OrderItemValidator : AbstractValidator<OrderItemDto>
         RuleFor(oi => oi.Quantity)
             .GreaterThan(0).WithMessage("Quantity must be greater than zero.");
 
-        RuleFor(oi => oi.Price)
+        RuleFor(oi => oi.UnitPrice)
             .GreaterThan(0).WithMessage("Price must be greater than zero.");
     }
 }

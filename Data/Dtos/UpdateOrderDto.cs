@@ -10,6 +10,8 @@ namespace webApi.Data.Dtos
         [Required(ErrorMessage = "The CustomerId field is required.")]
         public int CustomerId { get; set; }
 
+        public int ProductId { get; set; }
+
         [Required(ErrorMessage = "The TotalPrice field is required.")]
         public decimal TotalPrice { get; set; }
 
@@ -21,6 +23,5 @@ namespace webApi.Data.Dtos
 
         [Required(ErrorMessage = "The PaymentMethodId field is required.")]
         public int PaymentMethodId { get; set; }
-        public int OrderItemId { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace webApi.Validators
             RuleFor(x => x.Cpf).NotEmpty().Must(BeAValidCpf).WithMessage("Cpf is required");
             RuleFor(x => x.Email).NotEmpty().Must(IsValidEmail).WithMessage("Email is required");
             RuleFor(x => x.Password).NotEmpty().Must(IsValidPassword).WithMessage("Password is required");
+            RuleFor(x => x.Birthdate).Must(IsValidBirthday).WithMessage("Birthday is required and must be valid");
 
         }
 
@@ -104,6 +105,28 @@ namespace webApi.Validators
                 // Se ocorrer uma exceção, é porque o endereço de e-mail é inválido
                 return false;
             }
+        }
+
+        private bool IsValidBirthday(DateTime? birthday)
+        {
+            if (birthday == null) return false;
+
+            DateTime currentDate = DateTime.Now.Date;
+            if (birthday.Value.Date >= currentDate) return false;
+
+            int age = currentDate.Year - birthday.Value.Year;
+            if (birthday > currentDate.AddYears(-age))
+            {
+                age--;
+            }
+
+            int minimumAge = 18; 
+            if (age < minimumAge)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

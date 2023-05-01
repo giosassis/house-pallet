@@ -57,5 +57,15 @@ namespace webApi.Service.Implementation
         {
             return await _productRepository.DeleteProductAsync(id);
         }
+
+        public async Task UpdateProductStockAsync(Order order)
+        {
+            foreach(var orderItem in order.OrderItems)
+            {
+                var product = await _productRepository.GetProductByIdAsync(orderItem.ProductId);
+                product.Stock -= orderItem.Quantity;
+                await _productRepository.UpdateProductAsync(product);
+            }
+        }
     }
 }

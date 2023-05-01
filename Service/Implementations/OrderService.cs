@@ -2,6 +2,7 @@
 using webApi.Data.Dtos;
 using webApi.Models;
 using webApi.Repository.Interface;
+using webApi.Service.Implementation;
 
 namespace webApi.Service.Implementations
 {
@@ -9,12 +10,13 @@ namespace webApi.Service.Implementations
     {
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
+        private readonly ProductService _productService;
 
         public OrderService(IMapper mapper, IOrderRepository orderRepository)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
-        }
+              }
 
         public async Task<List<OrderDto>> GetAllOrdersAsync()
         {
@@ -32,6 +34,7 @@ namespace webApi.Service.Implementations
         {
             var order = _mapper.Map<Order>(orderDto);
             order = await _orderRepository.CreateOrderAsync(order);
+            await _productService.UpdateProductStockAsync(order);
             return _mapper.Map<CreateOrderDto>(order);
         }
 
